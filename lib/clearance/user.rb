@@ -49,7 +49,7 @@ module Clearance
       def self.included(model)
         model.class_eval do
           validates_presence_of     :email, :unless => :email_optional?
-          validates_uniqueness_of   :email, :case_sensitive => false, :allow_blank => true
+          validates_uniqueness_of   :email, :case_sensitive => false, :allow_blank => true, :unless => :email_not_unique?
           validates_format_of       :email, :with => %r{^[a-z0-9!#\$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#\$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$}i, :allow_blank => true
 
           validates_presence_of     :password, :unless => :password_optional?
@@ -168,6 +168,11 @@ module Clearance
       # (username, facebook, etc).
       # @return [Boolean] true if the email field be left blank for this user
       def email_optional?
+        false
+      end
+
+      # Always false. Override to allow multiple users with the same email account
+      def email_not_unique?
         false
       end
 
